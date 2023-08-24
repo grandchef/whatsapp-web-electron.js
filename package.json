@@ -2,9 +2,13 @@
   "name": "whatsapp-web-electron.js",
   "version": "1.21.0-1",
   "description": "Library for interacting with the WhatsApp Web API through electron",
-  "main": "./index.js",
+  "source": "./index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "typings": "./index.d.ts",
   "scripts": {
+    "lint": "eslint .",
+    "build": "parcel build",
     "test": "mocha tests --recursive --timeout 5000",
     "test-single": "mocha",
     "shell": "node --experimental-repl-await ./shell.js",
@@ -48,10 +52,11 @@
     "jsdoc": "^3.6.4",
     "jsdoc-baseline": "^0.1.5",
     "mocha": "^9.0.2",
+    "parcel": "^2.9.3",
     "sinon": "^13.0.1"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.0.0"
   },
   "optionalDependencies": {
     "archiver": "^5.3.1",
