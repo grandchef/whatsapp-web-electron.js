@@ -7,7 +7,7 @@
   "module": "dist/index.mjs",
   "typings": "./index.d.ts",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint index.js src/**/*.js",
     "build": "parcel build",
     "test": "mocha tests --recursive --timeout 5000",
     "test-single": "mocha",

@@ -6,12 +6,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-      - run: yarn
-      - run: yarn lint
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    - run: yarn
+    - run: yarn lint
 
   test:
     needs: lint
@@ -20,51 +20,51 @@ jobs:
       matrix:
         node: [ '16', '18' ]
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-      - run: yarn
-      - run: yarn test
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - run: yarn
+    - run: yarn test
 
   staging:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
 
-      - name: 'Build'
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-      - run: yarn
-      - run: yarn build
+    - name: 'Build'
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    - run: yarn
+    - run: yarn build
 
-      - name: 'Staging'
-      - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo "${{ secrets.DEV_GCR_KEYFILE }}" > ./gcr-key.json
-      - run: gcloud auth activate-service-account --key-file gcr-key.json
-      - run: gcloud config set project ${{ env.DEV_GCLOUD_PROJECT }}
-      - run: gsutil -m cp -r dist/* "gs://${{ env.DEV_ASSETS_BUCKET }}/${{ github.repository }}/"
+    - name: 'Staging'
+    - uses: 'google-github-actions/setup-gcloud@v1'
+    - run: echo "${{ secrets.DEV_GCR_KEYFILE }}" > ./gcr-key.json
+    - run: gcloud auth activate-service-account --key-file gcr-key.json
+    - run: gcloud config set project ${{ env.DEV_GCLOUD_PROJECT }}
+    - run: gsutil -m cp -r dist/* "gs://${{ env.DEV_ASSETS_BUCKET }}/${{ github.repository }}/"
 
   publish:
     needs: test
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
 
-      - name: 'Build'
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-      - run: yarn
-      - run: yarn build
+    - name: 'Build'
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    - run: yarn
+    - run: yarn build
 
-      - name: 'Publish'
-      - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo "${{ secrets.PROD_GCR_KEYFILE }}" > ./gcr-key.json
-      - run: gcloud auth activate-service-account --key-file gcr-key.json
-      - run: gcloud config set project ${{ env.PROD_GCLOUD_PROJECT }}
-      - run: gsutil -m cp -r dist/* "gs://${{ env.PROD_ASSETS_BUCKET }}/${{ github.repository }}/"
+    - name: 'Publish'
+    - uses: 'google-github-actions/setup-gcloud@v1'
+    - run: echo "${{ secrets.PROD_GCR_KEYFILE }}" > ./gcr-key.json
+    - run: gcloud auth activate-service-account --key-file gcr-key.json
+    - run: gcloud config set project ${{ env.PROD_GCLOUD_PROJECT }}
+    - run: gsutil -m cp -r dist/* "gs://${{ env.PROD_ASSETS_BUCKET }}/${{ github.repository }}/"
