@@ -42,7 +42,7 @@ jobs:
       - run: yarn build
 
       - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo "${{ secrets.DEV_GCR_KEYFILE }}" > ./gcr-key.json
+      - run: echo ${{ secrets.DEV_GCR_KEYFILE }} > ./gcr-key.json
       - run: gcloud auth activate-service-account --key-file gcr-key.json
       - run: gcloud config set project ${{ env.DEV_GCLOUD_PROJECT }}
       - run: gsutil -m cp -r dist/* "gs://${{ env.DEV_ASSETS_BUCKET }}/${{ github.repository }}/"
@@ -61,7 +61,7 @@ jobs:
       - run: yarn build
 
       - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo "${{ secrets.PROD_GCR_KEYFILE }}" > ./gcr-key.json
+      - run: echo ${{ secrets.PROD_GCR_KEYFILE }} > ./gcr-key.json
       - run: gcloud auth activate-service-account --key-file gcr-key.json
       - run: gcloud config set project ${{ env.PROD_GCLOUD_PROJECT }}
       - run: gsutil -m cp -r dist/* "gs://${{ env.PROD_ASSETS_BUCKET }}/${{ github.repository }}/"
