@@ -41,9 +41,14 @@ jobs:
       - run: yarn
       - run: yarn build
 
-      - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo ${{ secrets.DEV_GCR_KEYFILE }} > ./gcr-key.json
-      - run: gcloud auth activate-service-account --key-file gcr-key.json
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.DEV_GCR_KEYFILE }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
       - run: gcloud config set project ${{ env.DEV_GCLOUD_PROJECT }}
       - run: gsutil -m cp -r dist/* "gs://${{ env.DEV_ASSETS_BUCKET }}/${{ github.repository }}/"
 
@@ -60,8 +65,13 @@ jobs:
       - run: yarn
       - run: yarn build
 
-      - uses: 'google-github-actions/setup-gcloud@v1'
-      - run: echo ${{ secrets.PROD_GCR_KEYFILE }} > ./gcr-key.json
-      - run: gcloud auth activate-service-account --key-file gcr-key.json
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.PROD_GCR_KEYFILE }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
       - run: gcloud config set project ${{ env.PROD_GCLOUD_PROJECT }}
       - run: gsutil -m cp -r dist/* "gs://${{ env.PROD_ASSETS_BUCKET }}/${{ github.repository }}/"
