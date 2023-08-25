@@ -49,8 +49,9 @@ jobs:
       - id: 'upload-folder'
         uses: 'google-github-actions/upload-cloud-storage@v1'
         with:
-          path: 'dist/*'
+          path: '/dist'
           destination: '${{ env.DEV_ASSETS_BUCKET }}/${{ github.repository }}/'
+          glob: '*.js'
 
   publish:
     needs: lint
@@ -73,5 +74,6 @@ jobs:
       - id: 'upload-folder'
         uses: 'google-github-actions/upload-cloud-storage@v1'
         with:
-          path: 'dist/*'
+          path: '/dist'
           destination: '${{ env.PROD_ASSETS_BUCKET }}/${{ github.repository }}/'
+          glob: '*.js'
