@@ -8,7 +8,7 @@
   "typings": "./index.d.ts",
   "scripts": {
     "lint": "eslint index.js src/**/*.js",
-    "build": "parcel build",
+    "build": "ncc build index.js -m -o dist",
     "test": "mocha tests --recursive --timeout 5000",
     "test-single": "mocha",
     "shell": "node --experimental-repl-await ./shell.js",
@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.12",
+    "@vercel/ncc": "^0.36.1",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "dotenv": "^16.0.0",
@@ -52,7 +53,6 @@
     "jsdoc": "^3.6.4",
     "jsdoc-baseline": "^0.1.5",
     "mocha": "^9.0.2",
-    "parcel": "^2.9.3",
     "sinon": "^13.0.1"
   },
   "engines": {
