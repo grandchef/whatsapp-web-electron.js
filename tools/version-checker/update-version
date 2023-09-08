@@ -26,10 +26,7 @@ const updateInFile = (filePath, oldVersion, newVersion) => {
 };
 
 const updateVersion = async (oldVersion, newVersion) => {
-    const filesToUpdate = [
-        '../../src/util/Constants.js',
-        '../../README.md',
-    ];
+    const filesToUpdate = ['../../src/util/Constants.js'];
 
     for (const file of filesToUpdate) {
         updateInFile(file, oldVersion, newVersion);
