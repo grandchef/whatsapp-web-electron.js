@@ -62,8 +62,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16.x'
-      - run: TAG=${{ github.event.release.tag_name }}
-      - run: sed -i -E "s/\"version\"[:]\s*\"[0-9.]+\",/\"version\":\"${TAG#v}\",/g" package.json
+      - run: VERSION=${GITHUB_REF_NAME#v}
+      - run: sed -i -E "s/\"version\"[:]\s*\"[0-9.]+\",/\"version\":\"$VERSION\",/g" package.json
       - run: yarn
       - run: yarn build
 
