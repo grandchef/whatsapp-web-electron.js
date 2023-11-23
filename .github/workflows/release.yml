@@ -5,6 +5,7 @@ on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
+    if: github.ref_type != 'tag'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -62,16 +63,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+      - run: TAG=${{ github.event.release.tag_name }}
+      - run: sed -i -E "s/\"version\"[:]\s*\"[0-9.]+\",/\"version\":\"${TAG#v}\",/g" package.json
       - run: yarn
       - run: yarn build
 
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+      - uses: JS-DevTools/npm-publish@v1
         with:
-          credentials_json: '${{ secrets.PROD_GCR_KEYFILE }}'
-
-      - id: 'upload-folder'
-        uses: 'google-github-actions/upload-cloud-storage@v1'
-        with:
-          path: 'dist'
-          destination: '${{ vars.PROD_ASSETS_BUCKET }}/${{ vars.PATH_DESTINATION }}/'
+          token: ${{ secrets.NPM_TOKEN }}
