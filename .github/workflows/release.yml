@@ -63,6 +63,7 @@ jobs:
         with:
           node-version: '16.x'
       - run: VERSION=${GITHUB_REF_NAME#v}
+      - run: echo "version=$VERSION" >> $GITHUB_OUTPUT
       - run: sed -i -E "s/\"version\"[:]\s*\"[0-9.]+\",/\"version\":\"$VERSION\",/g" package.json
       - run: yarn
       - run: yarn build
