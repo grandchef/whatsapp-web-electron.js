@@ -1,6 +1,6 @@
 {
   "name": "@grandchef/whatsapp-web-electron.js",
-  "version": "1.22.3",
+  "version": "1.0.0",
   "description": "Library for interacting with the WhatsApp Web API through electron",
   "private": false,
   "publishConfig": {
