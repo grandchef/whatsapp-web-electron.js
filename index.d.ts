@@ -2,11 +2,13 @@
 import { EventEmitter } from 'events'
 import { RequestInit } from 'node-fetch'
 import * as puppeteer from 'puppeteer'
+import { BrowserWindow } from 'electron'
+import { BrowserView } from 'electron';
 
 declare namespace WAWebJS {
 
     export class Client extends EventEmitter {
-        constructor(options: ClientOptions)
+        constructor(puppeteerBrowser: puppeteer.Browser, browserWindow: BrowserWindow | BrowserView, options: ClientOptions)
 
         /** Current connection information */
         public info: ClientInfo
@@ -419,7 +421,7 @@ declare namespace WAWebJS {
          * @default 0 */
         authTimeoutMs?: number,
         /** Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/ */
-        puppeteer?: puppeteer.PuppeteerNodeLaunchOptions & puppeteer.ConnectOptions
+        puppeteer?: puppeteer.LaunchOptions & puppeteer.ConnectOptions
 		/** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
         authStrategy?: AuthStrategy,
         /** The version of WhatsApp Web to use. Use options.webVersionCache to configure how the version is retrieved. */
