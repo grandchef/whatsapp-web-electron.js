@@ -4,6 +4,7 @@ import { RequestInit } from 'node-fetch'
 import * as puppeteer from 'puppeteer'
 import { BrowserWindow } from 'electron'
 import { BrowserView } from 'electron';
+import InterfaceController from './src/util/InterfaceController'
 
 declare namespace WAWebJS {
 
@@ -18,6 +19,9 @@ declare namespace WAWebJS {
 
         /** Puppeteer browser running WhatsApp Web */
         pupBrowser?: puppeteer.Browser
+
+        /** Client interactivity interface */
+        interface?: InterfaceController
 
         /**Accepts an invitation to join a group */
         acceptInvite(inviteCode: string): Promise<string>
@@ -112,6 +116,14 @@ declare namespace WAWebJS {
          * @param unmuteDate Date when the chat will be unmuted, leave as is to mute forever
          */
         muteChat(chatId: string, unmuteDate?: Date): Promise<void>
+
+        /**
+         * Request authentication via pairing code instead of QR code
+         * @param phoneNumber - Phone number in international, symbol-free format (e.g. 12025550108 for US, 551155501234 for Brazil)
+         * @param showNotification - Show notification to pair on phone number
+         * @returns {Promise<string>} - Returns a pairing code in format "ABCDEFGH"
+         */
+        requestPairingCode(phoneNumber: string, showNotification = true): Promise<string>
 
         /** Force reset of connection state for the client */
         resetState(): Promise<void>
@@ -217,7 +229,7 @@ declare namespace WAWebJS {
         /** Emitted when the client has been disconnected */
         on(event: 'disconnected', listener: (
             /** reason that caused the disconnect */
-            reason: WAState | "NAVIGATION"
+            reason: WAState | "LOGOUT"
         ) => void): this
 
         /** Emitted when a user joins the chat via invite link or is added by an admin */
@@ -1063,6 +1075,8 @@ declare namespace WAWebJS {
         }[]
         /** Send 'seen' status */
         sendSeen?: boolean
+        /** Bot Wid when doing a bot mention like @Meta AI */
+        invokedBotWid?: string
         /** Media to be sent */
         media?: MessageMedia
         /** Extra options */
